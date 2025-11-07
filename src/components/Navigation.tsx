@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Heart } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import familyLogo from "@/assets/family-logo.png";
 
 const navItems = [
   { name: "Home", path: "/" },
@@ -19,13 +20,17 @@ export const Navigation = () => {
   const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
+    <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-md">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <Heart className="w-6 h-6 text-primary transition-transform group-hover:scale-110" />
-            <span className="text-xl font-semibold text-heading">The Azzariah's Family</span>
+          <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src={familyLogo} 
+              alt="The Azzariah's Family Logo" 
+              className="w-12 h-12 transition-transform group-hover:scale-110 group-hover:rotate-3"
+            />
+            <span className="text-xl font-semibold text-heading hidden sm:inline">The Azzariah's Family</span>
           </Link>
 
           {/* Desktop Navigation */}

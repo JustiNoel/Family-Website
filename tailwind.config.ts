@@ -51,6 +51,9 @@ export default {
           DEFAULT: "hsl(var(--heading))",
           secondary: "hsl(var(--heading-secondary))",
         },
+        navy: "hsl(var(--navy))",
+        gold: "hsl(var(--gold))",
+        "gold-light": "hsl(var(--gold-light))",
       },
       borderRadius: {
         lg: "var(--radius)",

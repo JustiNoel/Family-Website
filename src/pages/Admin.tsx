@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Edit, Image, Type, Upload, Save } from "lucide-react";
+import { Plus, Trash2, Edit, Image, Upload, Save, UserCheck, UserX, Users } from "lucide-react";
 
 const Admin = () => {
   const { user, isAdmin, loading } = useAuth();
@@ -20,6 +20,7 @@ const Admin = () => {
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [siteContent, setSiteContent] = useState<any[]>([]);
   const [galleryPhotos, setGalleryPhotos] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
   const [editingSlide, setEditingSlide] = useState<any>(null);
   const [editingContent, setEditingContent] = useState<any>(null);
   const [newSlide, setNewSlide] = useState({ title: "", subtitle: "", image_url: "" });
@@ -36,14 +37,16 @@ const Admin = () => {
   }, [loading, user, isAdmin]);
 
   const fetchAll = async () => {
-    const [slides, content, photos] = await Promise.all([
+    const [slides, content, photos, membersRes] = await Promise.all([
       supabase.from("hero_slides").select("*").order("sort_order"),
       supabase.from("site_content").select("*"),
       supabase.from("gallery_photos").select("*").order("created_at", { ascending: false }),
+      supabase.from("profiles").select("*").order("created_at", { ascending: false }),
     ]);
     if (slides.data) setHeroSlides(slides.data);
     if (content.data) setSiteContent(content.data);
     if (photos.data) setGalleryPhotos(photos.data);
+    if (membersRes.data) setMembers(membersRes.data);
   };
 
   const uploadImage = async (file: File, folder: string = "general") => {
@@ -140,6 +143,18 @@ const Admin = () => {
     }
   };
 
+  const approveMember = async (id: string) => {
+    const { error } = await supabase.from("profiles").update({ approved: true }).eq("id", id);
+    if (!error) { toast({ title: "Member approved!" }); fetchAll(); }
+    else toast({ title: "Error", description: error.message, variant: "destructive" });
+  };
+
+  const revokeMember = async (id: string) => {
+    const { error } = await supabase.from("profiles").update({ approved: false }).eq("id", id);
+    if (!error) { toast({ title: "Member access revoked" }); fetchAll(); }
+    else toast({ title: "Error", description: error.message, variant: "destructive" });
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!isAdmin) return null;
 
@@ -151,12 +166,63 @@ const Admin = () => {
           <Badge variant="default" className="text-sm">Admin</Badge>
         </div>
 
-        <Tabs defaultValue="hero" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="members" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="members">
+              Members {members.filter(m => !m.approved).length > 0 && (
+                <span className="ml-1 bg-destructive text-destructive-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                  {members.filter(m => !m.approved).length}
+                </span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="hero">Hero Slides</TabsTrigger>
             <TabsTrigger value="content">Site Content</TabsTrigger>
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
           </TabsList>
+
+          {/* Members Tab */}
+          <TabsContent value="members" className="space-y-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <Users className="w-5 h-5" /> Family Members
+            </h2>
+            {members.filter(m => !m.approved).length > 0 && (
+              <Card className="p-4 border-primary/50 bg-primary/5">
+                <h3 className="font-semibold mb-3 text-primary">⏳ Pending Approval</h3>
+                <div className="space-y-3">
+                  {members.filter(m => !m.approved).map(member => (
+                    <div key={member.id} className="flex items-center justify-between p-3 bg-background rounded-lg">
+                      <div>
+                        <p className="font-medium">{member.display_name || "No name"}</p>
+                        <p className="text-sm text-muted-foreground">{member.email}</p>
+                        <p className="text-xs text-muted-foreground">Joined {new Date(member.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <Button size="sm" onClick={() => approveMember(member.id)}>
+                        <UserCheck className="w-4 h-4 mr-1" /> Approve
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">✅ Approved Members</h3>
+              <div className="space-y-3">
+                {members.filter(m => m.approved).map(member => (
+                  <div key={member.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                    <div>
+                      <p className="font-medium">{member.display_name || "No name"}</p>
+                      <p className="text-sm text-muted-foreground">{member.email}</p>
+                    </div>
+                    {member.email !== 'justinoel254@gmail.com' && (
+                      <Button size="sm" variant="outline" onClick={() => revokeMember(member.id)}>
+                        <UserX className="w-4 h-4 mr-1" /> Revoke
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </TabsContent>
 
           {/* Hero Slides Tab */}
           <TabsContent value="hero" className="space-y-6">

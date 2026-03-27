@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      content_suggestions: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          id: string
+          page: string
+          reviewed_at: string | null
+          section_key: string
+          status: string
+          suggested_content: string | null
+          suggested_title: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          id?: string
+          page: string
+          reviewed_at?: string | null
+          section_key: string
+          status?: string
+          suggested_content?: string | null
+          suggested_title?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          id?: string
+          page?: string
+          reviewed_at?: string | null
+          section_key?: string
+          status?: string
+          suggested_content?: string | null
+          suggested_title?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       gallery_photos: {
         Row: {
           caption: string | null

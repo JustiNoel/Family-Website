@@ -20,6 +20,7 @@ const Admin = () => {
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [siteContent, setSiteContent] = useState<any[]>([]);
   const [galleryPhotos, setGalleryPhotos] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
   const [editingSlide, setEditingSlide] = useState<any>(null);
   const [editingContent, setEditingContent] = useState<any>(null);
   const [newSlide, setNewSlide] = useState({ title: "", subtitle: "", image_url: "" });

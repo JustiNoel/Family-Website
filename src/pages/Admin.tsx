@@ -143,6 +143,18 @@ const Admin = () => {
     }
   };
 
+  const approveMember = async (id: string) => {
+    const { error } = await supabase.from("profiles").update({ approved: true }).eq("id", id);
+    if (!error) { toast({ title: "Member approved!" }); fetchAll(); }
+    else toast({ title: "Error", description: error.message, variant: "destructive" });
+  };
+
+  const revokeMember = async (id: string) => {
+    const { error } = await supabase.from("profiles").update({ approved: false }).eq("id", id);
+    if (!error) { toast({ title: "Member access revoked" }); fetchAll(); }
+    else toast({ title: "Error", description: error.message, variant: "destructive" });
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (!isAdmin) return null;
 

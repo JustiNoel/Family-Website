@@ -106,15 +106,18 @@ export const Navigation = () => {
                 <Shield className="w-3 h-3 inline mr-1" /> Admin Dashboard
               </Link>
             )}
-            {user ? (
-              <button onClick={() => { handleSignOut(); setMobileMenuOpen(false); }} className="block w-full text-left px-4 py-3 rounded-lg text-sm font-medium text-foreground hover:bg-secondary">
-                <LogOut className="w-3 h-3 inline mr-1" /> Sign Out
-              </button>
-            ) : (
-              <Link to="/auth" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-sm font-medium text-primary hover:bg-secondary">
-                <LogIn className="w-3 h-3 inline mr-1" /> Sign In
-              </Link>
-            )}
+            <div className="flex items-center justify-between px-4 py-3">
+              <ThemeToggle />
+              {user ? (
+                <button onClick={() => { handleSignOut(); setMobileMenuOpen(false); }} className="rounded-lg text-sm font-medium text-foreground hover:bg-secondary px-3 py-2">
+                  <LogOut className="w-3 h-3 inline mr-1" /> Sign Out
+                </button>
+              ) : (
+                <Link to="/auth" onClick={() => setMobileMenuOpen(false)} className="rounded-lg text-sm font-medium text-primary hover:bg-secondary px-3 py-2">
+                  <LogIn className="w-3 h-3 inline mr-1" /> Sign In
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, Image, Calendar, BookOpen, Mail, UtensilsCrossed } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SuggestUpdate } from "@/components/SuggestUpdate";
 
 const featureCards = [
   { icon: Users, title: "Our Story", description: "Discover our family's journey, values, and the bonds that connect us across generations.", link: "/about" },
@@ -41,6 +42,7 @@ const Home = () => {
         <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
           <h2 className="text-3xl md:text-4xl font-bold text-heading mb-6">{introContent.title}</h2>
           <p className="text-lg text-muted-foreground leading-relaxed">{introContent.content}</p>
+          <SuggestUpdate page="Home" sectionKey="home_intro" currentTitle={introContent.title} currentContent={introContent.content} />
         </div>
       </section>
 

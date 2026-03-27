@@ -37,14 +37,16 @@ const Admin = () => {
   }, [loading, user, isAdmin]);
 
   const fetchAll = async () => {
-    const [slides, content, photos] = await Promise.all([
+    const [slides, content, photos, membersRes] = await Promise.all([
       supabase.from("hero_slides").select("*").order("sort_order"),
       supabase.from("site_content").select("*"),
       supabase.from("gallery_photos").select("*").order("created_at", { ascending: false }),
+      supabase.from("profiles").select("*").order("created_at", { ascending: false }),
     ]);
     if (slides.data) setHeroSlides(slides.data);
     if (content.data) setSiteContent(content.data);
     if (photos.data) setGalleryPhotos(photos.data);
+    if (membersRes.data) setMembers(membersRes.data);
   };
 
   const uploadImage = async (file: File, folder: string = "general") => {

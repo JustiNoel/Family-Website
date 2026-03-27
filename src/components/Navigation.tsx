@@ -65,6 +65,7 @@ export const Navigation = () => {
                 <Shield className="w-3 h-3" /> Admin
               </Link>
             )}
+            <ThemeToggle />
             {user ? (
               <Button variant="ghost" size="sm" onClick={handleSignOut} className="ml-2">
                 <LogOut className="w-4 h-4 mr-1" /> Sign Out

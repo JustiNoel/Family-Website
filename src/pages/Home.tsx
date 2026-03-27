@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, Image, Calendar, BookOpen, Mail, UtensilsCrossed } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SuggestUpdate } from "@/components/SuggestUpdate";
 
 const featureCards = [
   { icon: Users, title: "Our Story", description: "Discover our family's journey, values, and the bonds that connect us across generations.", link: "/about" },

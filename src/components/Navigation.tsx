@@ -4,6 +4,7 @@ import { Menu, X, LogIn, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import familyLogo from "@/assets/family-logo.png";
 
 const navItems = [

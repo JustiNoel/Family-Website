@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Edit, Image, Type, Upload, Save } from "lucide-react";
+import { Plus, Trash2, Edit, Image, Upload, Save, UserCheck, UserX, Users } from "lucide-react";
 
 const Admin = () => {
   const { user, isAdmin, loading } = useAuth();

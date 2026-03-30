@@ -4,9 +4,10 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Image, Calendar, BookOpen, Mail, UtensilsCrossed } from "lucide-react";
+import { Users, Image, Calendar, BookOpen, Mail, UtensilsCrossed, Shuffle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SuggestUpdate } from "@/components/SuggestUpdate";
+import { ScrollAnimator } from "@/components/ScrollAnimator";
 
 const featureCards = [
   { icon: Users, title: "Our Story", description: "Discover our family's journey, values, and the bonds that connect us across generations.", link: "/about" },
@@ -20,6 +21,7 @@ const featureCards = [
 const Home = () => {
   const [introContent, setIntroContent] = useState({ title: "Welcome to Our Digital Home", content: "The Azzariah's Family website is a place where we celebrate our heritage, share our stories, and stay connected no matter where life takes us." });
   const [newsletterContent, setNewsletterContent] = useState({ title: "Stay Connected", content: "Subscribe to our family newsletter for updates, event reminders, and special announcements." });
+  const [randomPhoto, setRandomPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -32,49 +34,82 @@ const Home = () => {
       }
     };
     fetchContent();
+    fetchRandomPhoto();
   }, []);
+
+  const fetchRandomPhoto = async () => {
+    const { data } = await supabase.from("gallery_photos").select("image_url");
+    if (data && data.length > 0) {
+      const random = data[Math.floor(Math.random() * data.length)];
+      setRandomPhoto(random.image_url);
+    }
+  };
 
   return (
     <div className="min-h-screen">
       <HeroCarousel />
 
       <section className="container mx-auto px-4 py-16 md:py-24">
-        <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
-          <h2 className="text-3xl md:text-4xl font-bold text-heading mb-6">{introContent.title}</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">{introContent.content}</p>
-          <SuggestUpdate page="Home" sectionKey="home_intro" currentTitle={introContent.title} currentContent={introContent.content} />
-        </div>
+        <ScrollAnimator>
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-heading mb-6">{introContent.title}</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">{introContent.content}</p>
+            <SuggestUpdate page="Home" sectionKey="home_intro" currentTitle={introContent.title} currentContent={introContent.content} />
+          </div>
+        </ScrollAnimator>
       </section>
 
       <section className="container mx-auto px-4 pb-16 md:pb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featureCards.map((card, index) => (
-            <Link to={card.link} key={index}>
-              <Card className="p-6 h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
-                <div className="flex flex-col items-center text-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <card.icon className="w-8 h-8 text-primary" />
+            <ScrollAnimator key={index} delay={index * 80}>
+              <Link to={card.link}>
+                <Card className="p-6 h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <card.icon className="w-8 h-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-heading">{card.title}</h3>
+                    <p className="text-muted-foreground">{card.description}</p>
                   </div>
-                  <h3 className="text-xl font-semibold text-heading">{card.title}</h3>
-                  <p className="text-muted-foreground">{card.description}</p>
-                </div>
-              </Card>
-            </Link>
+                </Card>
+              </Link>
+            </ScrollAnimator>
           ))}
         </div>
       </section>
 
+      {/* Random Memory */}
+      {randomPhoto && (
+        <section className="container mx-auto px-4 pb-16">
+          <ScrollAnimator>
+            <Card className="p-8 flex flex-col md:flex-row items-center gap-8 overflow-hidden">
+              <img src={randomPhoto} alt="Random family memory" className="w-full md:w-1/2 h-64 object-cover rounded-lg" loading="lazy" />
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl font-bold text-heading mb-3">Random Memory</h3>
+                <p className="text-muted-foreground mb-4">Click to see another cherished moment from our gallery!</p>
+                <Button onClick={fetchRandomPhoto} variant="outline">
+                  <Shuffle className="w-4 h-4 mr-2" /> Another Memory
+                </Button>
+              </div>
+            </Card>
+          </ScrollAnimator>
+        </section>
+      )}
+
       <section className="bg-card border-y border-border py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-heading mb-4">{newsletterContent.title}</h2>
-            <p className="text-muted-foreground mb-8">{newsletterContent.content}</p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <Input type="email" placeholder="Enter your email" className="flex-1" />
-              <Button className="sm:w-auto">Subscribe</Button>
+        <ScrollAnimator>
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-3xl font-bold text-heading mb-4">{newsletterContent.title}</h2>
+              <p className="text-muted-foreground mb-8">{newsletterContent.content}</p>
+              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <Input type="email" placeholder="Enter your email" className="flex-1" />
+                <Button className="sm:w-auto">Subscribe</Button>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollAnimator>
       </section>
     </div>
   );

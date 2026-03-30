@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationBell } from "@/components/NotificationBell";
+import { GlobalSearch } from "@/components/GlobalSearch";
 import familyLogo from "@/assets/family-logo.png";
 
 const navItems = [
@@ -43,7 +45,7 @@ export const Navigation = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   location.pathname === item.path
                     ? "bg-primary text-primary-foreground"
                     : "text-foreground hover:bg-secondary hover:text-heading"
@@ -56,7 +58,7 @@ export const Navigation = () => {
               <Link
                 to="/admin"
                 className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1",
+                  "px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1",
                   location.pathname === "/admin"
                     ? "bg-primary text-primary-foreground"
                     : "text-foreground hover:bg-secondary hover:text-heading"
@@ -65,23 +67,29 @@ export const Navigation = () => {
                 <Shield className="w-3 h-3" /> Admin
               </Link>
             )}
+            <GlobalSearch />
+            <NotificationBell />
             <ThemeToggle />
             {user ? (
-              <Button variant="ghost" size="sm" onClick={handleSignOut} className="ml-2">
+              <Button variant="ghost" size="sm" onClick={handleSignOut} className="ml-1">
                 <LogOut className="w-4 h-4 mr-1" /> Sign Out
               </Button>
             ) : (
               <Link to="/auth">
-                <Button variant="outline" size="sm" className="ml-2">
+                <Button variant="outline" size="sm" className="ml-1">
                   <LogIn className="w-4 h-4 mr-1" /> Sign In
                 </Button>
               </Link>
             )}
           </div>
 
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
+          <div className="flex items-center gap-1 md:hidden">
+            <NotificationBell />
+            <ThemeToggle />
+            <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
+          </div>
         </div>
 
         {mobileMenuOpen && (
@@ -107,7 +115,6 @@ export const Navigation = () => {
               </Link>
             )}
             <div className="flex items-center justify-between px-4 py-3">
-              <ThemeToggle />
               {user ? (
                 <button onClick={() => { handleSignOut(); setMobileMenuOpen(false); }} className="rounded-lg text-sm font-medium text-foreground hover:bg-secondary px-3 py-2">
                   <LogOut className="w-3 h-3 inline mr-1" /> Sign Out
